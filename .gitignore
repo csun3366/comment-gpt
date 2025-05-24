@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*.sqlite3
+*.log
+*.db
+.env
+venv/
+
+# Django
+*.migrations/
+
+# Node / Vue
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+
+# VSCode
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
