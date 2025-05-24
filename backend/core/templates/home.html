@@ -1,1 +1,130 @@
-<h1>Hi, this is comment-gpt!!!</h1>
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Comment.ai - 用 AI 為你整理 Google 店家評論</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Noto Sans TC', sans-serif;
+      background: #f9f9f9;
+    }
+
+    .navbar {
+      background: white;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #fdfbfb, #ebedee);
+      padding: 100px 0;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 700;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      color: #555;
+    }
+
+    .form-area {
+      max-width: 600px;
+      margin: 30px auto 0;
+    }
+
+    .card {
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    }
+
+    #result-box {
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="#">Comment.ai</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="container">
+      <h1>為你整理 Google 店家評論</h1>
+      <p class="mb-4">輸入店家名稱，立即取得 AI 分析報告！</p>
+
+      <form id="form" class="form-area d-flex">
+        <input type="text" id="place_name" class="form-control me-2" placeholder="請輸入店家名稱" required />
+        <button type="submit" class="btn btn-primary">
+          <span id="btn-text">分析</span>
+          <span id="btn-loading" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+        </button>
+      </form>
+
+      <div id="error-box" class="alert alert-danger mt-4 d-none"></div>
+    </div>
+  </section>
+
+  <section class="container mt-5">
+    <div id="result-box" class="card p-4 d-none">
+      <h5 class="text-muted mb-3">📋 AI 整理報告</h5>
+      <div id="result" class="text-dark"></div>
+    </div>
+  </section>
+
+  <script>
+    const form = document.getElementById('form');
+    const btnText = document.getElementById('btn-text');
+    const btnLoading = document.getElementById('btn-loading');
+    const resultBox = document.getElementById('result-box');
+    const result = document.getElementById('result');
+    const errorBox = document.getElementById('error-box');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const placeName = document.getElementById('place_name').value;
+
+      resultBox.classList.add('d-none');
+      errorBox.classList.add('d-none');
+      btnText.classList.add('d-none');
+      btnLoading.classList.remove('d-none');
+
+      try {
+        const res = await fetch('/api/summarize/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+          },
+          body: JSON.stringify({ place_name: placeName })
+        });
+
+        const data = await res.json();
+        btnText.classList.remove('d-none');
+        btnLoading.classList.add('d-none');
+
+        if (data.summary) {
+          result.innerText = data.summary;
+          resultBox.classList.remove('d-none');
+        } else {
+          errorBox.textContent = data.error || "發生錯誤";
+          errorBox.classList.remove('d-none');
+        }
+      } catch (err) {
+        errorBox.textContent = "連線失敗，請稍後再試。";
+        errorBox.classList.remove('d-none');
+        btnText.classList.remove('d-none');
+        btnLoading.classList.add('d-none');
+      }
+    });
+  </script>
+</body>
+</html>
