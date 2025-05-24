@@ -81,7 +81,8 @@
         </header>
         <section class="container mt-5 mb-5">
             <div id="result-box" class="card p-4 d-none">
-            <h5 class="text-muted mb-3">📋 AI 整理報告</h5>
+            <h5 class="text-muted mb-3">🧠 AI 深度總結評論</h5>
+            <div id="rating-info" class="mb-3 text-secondary"></div>
             <div id="result" class="text-dark"></div>
             </div>
         </section>
@@ -101,6 +102,7 @@
             const btnLoading = document.getElementById('btn-loading');
             const resultBox = document.getElementById('result-box');
             const result = document.getElementById('result');
+            const ratingInfo = document.getElementById('rating-info');
             const errorBox = document.getElementById('error-box');
 
             form.addEventListener('submit', async (e) => {
@@ -128,6 +130,7 @@
 
                 if (data.summary) {
                 result.innerText = data.summary;
+                ratingInfo.innerHTML = `⭐️ <strong>${data.rating}</strong> 顆星（${data.total} 則評論）`;
                 resultBox.classList.remove('d-none');
                 } else {
                 errorBox.textContent = data.error || "發生錯誤";

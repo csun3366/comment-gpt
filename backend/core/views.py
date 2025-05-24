@@ -60,14 +60,18 @@ def summarize_review(request):
         detail_url = "https://maps.googleapis.com/maps/api/place/details/json"
         detail_params = {
             'place_id': place_id,
-            'fields': 'name,rating,reviews',
+            'fields': 'name,rating,user_ratings_total,reviews',
             'language': 'zh-TW',
             'key': 'AIzaSyAgx03MCcyAhsgNBuhvXPMMzPGETm9ktMM'
         }
 
         detail_resp = requests.get(detail_url, params=detail_params).json()
         reviews = detail_resp.get('result', {}).get('reviews', [])
-        if not reviews:
+        rating = detail_resp.get('result', {}).get("rating")
+        total = detail_resp.get('result', {}).get("user_ratings_total")
+        print('星星' + str(rating))
+        print('評論數' + str(total))
+        if not reviews or not rating or not total:
             return JsonResponse({'error': '此店家無評論'}, status=404)
 
         # 整理評論文字
@@ -83,6 +87,6 @@ def summarize_review(request):
         ]
         reply = chat_with_openrouter(messages)
         print("AI 回答：", reply)
-        return JsonResponse({'summary': reply})
+        return JsonResponse({'summary': reply, 'rating' : rating, 'total' : total})
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
