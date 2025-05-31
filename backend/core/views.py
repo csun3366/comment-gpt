@@ -10,9 +10,9 @@ from openai import OpenAI
 import cohere
 
 co = cohere.Client('DSQb7a87LJxScaq86Nl1UDUWtbay61TdOiXFBVAC')
-openrouter_key = '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'
+openrouter_key = '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'
 
-def chat_with_openrouter(messages, model="openai/gpt-3.5-turbo"):
+def chat_with_openrouter(messages, model="deepseek/deepseek-prover-v2:free"):
     url = "https://openrouter.ai/api/v1/chat/completions"
 
     headers = {
