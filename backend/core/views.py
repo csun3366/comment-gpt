@@ -10,7 +10,7 @@ from openai import OpenAI
 import cohere
 
 co = cohere.Client('DSQb7a87LJxScaq86Nl1UDUWtbay61TdOiXFBVAC')
-openrouter_key = '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'
+openrouter_key = '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'
 
 def chat_with_openrouter(messages, model="deepseek/deepseek-prover-v2:free"):
     url = "https://openrouter.ai/api/v1/chat/completions"
@@ -76,7 +76,7 @@ def summarize_review(request):
 
         # 整理評論文字
         review_texts = [r['text'] for r in reviews if r.get('text')]
-        prompt = f"請根據收集到的 Google 評論，幫我總結「{place_name}」的評價，並指出優缺點，要用中文評論：\n\n"
+        prompt = f"請根據收集到的 Google 評論，幫我總結「{place_name}」的評價，並指出優缺點，盡量舉出具體的實際例子，要用中文評論：\n\n"
         for r in review_texts:
             prompt += f"- {r.strip()}\n"
         print(prompt)
