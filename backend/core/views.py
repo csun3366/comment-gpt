@@ -10,9 +10,9 @@ from openai import OpenAI
 import cohere
 
 co = cohere.Client('DSQb7a87LJxScaq86Nl1UDUWtbay61TdOiXFBVAC')
-openrouter_key = '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'
+openrouter_key = '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'
 
-def chat_with_openrouter(messages, model="deepseek/deepseek-prover-v2:free"):
+def chat_with_openrouter(messages, model="deepseek/deepseek-r1:free"):
     url = "https://openrouter.ai/api/v1/chat/completions"
 
     headers = {
@@ -76,7 +76,7 @@ def summarize_review(request):
 
         # 整理評論文字
         review_texts = [r['text'] for r in reviews if r.get('text')]
-        prompt = f"請根據收集到的 Google 評論，幫我總結「{place_name}」的評價，並指出優缺點，盡量舉出具體的實際例子，要用中文評論：\n\n"
+        prompt = f"請根據收集到的 Google 評論，幫我總結「{place_name}」的評價，幫我分別整理出這家店在 價格、服務、環境、其他 方面的優點與缺點，每項都要列出具體事例或說法，要用繁體中文評論，格式要是:💰價格：✅優點 ❌ 缺點，🛎️服務：✅優點 ❌ 缺點，🌳環境：✅優點 ❌ 缺點，🍽️其他：：✅優點 ❌ 缺點，請不要使用 ** 或 Markdown 粗體符號，直接用純文字輸出分類標題與說明\n\n"
         for r in review_texts:
             prompt += f"- {r.strip()}\n"
         print(prompt)
